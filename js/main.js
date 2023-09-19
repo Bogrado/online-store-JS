@@ -1,6 +1,5 @@
 'use strict'
 
-
 const catalogContainer = document.querySelector('.productWraps')
 const itemsData = [
     {
