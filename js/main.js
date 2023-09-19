@@ -68,12 +68,25 @@ const renderItem = ({id, imgSrc = 'img/default.jpeg', title = 'unknown', price =
 }
 /**
  * Рендер карточек каталога через метод forEach, благодаря этому методу не возникает проблемы с отображением запятой, так как forEach не создает новый массив, а работает со значениями нынешнего.
+ * Но этот метод нагружает браузер, когда товаров становится много, потому что каждый раз после += удаляется старая разметка и строится новая + 1 товар, в данном случае лучше использовать insertAdjacentHTML
  * @param header
  * @param data
  */
+
 // const renderCatalogList = (header, data) => {
 //     header.innerHTML = ''
 //     data.forEach(item => header.innerHTML += renderItem(item))
+// }
+
+/**
+ * Использование forEach с insertAdjacentHTML
+  * @param header
+ * @param data
+ */
+
+// const renderCatalogList = (header, data) => {
+//     header.innerHTML = ''
+//     data.forEach(item => header.insertAdjacentHTML('beforeend', renderItem(item)))
 // }
 
 /**
