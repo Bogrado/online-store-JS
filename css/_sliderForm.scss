@@ -1,0 +1,165 @@
+.feedback-slider {
+    background: url(../img/backgroundslide.jpg) no-repeat, rgba(242, 242, 242, 0.5);
+    background-size: cover;
+    background-position: left bottom;
+    background-blend-mode: overlay;
+
+    .container {
+        min-height: 441px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        @media(max-width:992px) {
+            flex-direction: column;
+            min-height: initial;
+        }
+
+        .line {
+            width: 2px;
+
+
+
+            background: #FFFFFF;
+            min-height: inherit;
+
+            @media(max-width:992px) {
+                display: none;
+            }
+        }
+
+        .feedback {
+            @media(max-width:992px) {
+                padding: 30px 0;
+                box-sizing: content-box;
+            }
+
+            display: flex;
+            align-items: flex-start;
+            max-width: 500px;
+
+            .feedback-text {
+                margin-left: 28px;
+            }
+
+            p {
+                font-size: 16px;
+                line-height: 26px;
+                font-weight: 400;
+                font-style: italic;
+                letter-spacing: 0.025em;
+                color: #222224;
+                margin-bottom: 19px;
+
+            }
+
+            h1 {
+                font-size: 16px;
+                line-height: 16px;
+                font-weight: 700;
+                letter-spacing: 0.025em;
+                color: #f16d7f;
+                margin-bottom: 6px;
+            }
+
+            h2 {
+                font-size: 12px;
+                line-height: 14px;
+                font-weight: 300;
+                color: #222224;
+                margin-bottom: 0;
+            }
+
+        }
+
+        .feedback-Form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            @media(max-width:992px) {
+                padding: 30px 0;
+                box-sizing: content-box;
+            }
+
+            @media(max-width:425px) {
+                align-items: center;
+            }
+
+            .form-head {
+
+                margin-bottom: 30px;
+                text-align: center;
+
+
+                h1 {
+                    font-size: 24px;
+                    line-height: 24px;
+                    font-weight: 400;
+                    text-transform: uppercase;
+                    letter-spacing: 0.025em;
+                    color: #222224;
+                }
+
+                h2 {
+                    font-size: 14px;
+                    line-height: 24px;
+                    text-transform: uppercase;
+                    margin-bottom: 0;
+                }
+            }
+
+            .formmail {
+                display: flex;
+                text-align: center;
+                justify-content: center;
+                box-sizing: border-box;
+
+                @media(max-width:425px) {
+                    width: 75%;
+                }
+
+                .input1 {
+                    width: 281px;
+                    height: 46px;
+                    background-color: #e1e1e1;
+                    border-radius: 23px 0 0 23px;
+                    border: none;
+                    outline: none;
+                    padding-left: 28px;
+                    text-transform: capitalize;
+                    opacity: 0.67;
+                    font-family: Lato, sans-serif;
+                    font-size: 14px;
+                    line-height: 54px;
+                    font-weight: 400;
+                    letter-spacing: 0.025em;
+                    color: #222224;
+
+                    @media(max-width:385px) {
+                        width: 165px;
+                    }
+                }
+
+                .input2 {
+                    width: 104px;
+                    height: 46px;
+                    background-color: #f16d7f;
+                    border-radius: 0px 23px 23px 0px;
+                    border: none;
+                    outline: none;
+                    font-size: 14px;
+                    font-weight: 400;
+                    letter-spacing: 0.025em;
+                    color: #ffffff;
+                    cursor: pointer;
+
+                    @media(max-width:385px) {
+                        width: 140px;
+                    }
+                }
+
+            }
+        }
+    }
+}
