@@ -21,6 +21,7 @@ class Catalog {
     init(){
         this._fetchData()
         this._render()
+        console.log(this._getProductsPrice())
     }
 
     /**
@@ -34,38 +35,44 @@ class Catalog {
                 title: 'Name 1',
                 id: 1,
                 price: 2000,
-                img: 'img/catprod_1.jpg'
+                img: 'img/catprod_1.jpg',
+                qty: 3
 
             },
             {
                 title: 'Name 2',
                 id: 2,
                 price: 200,
-                img: 'img/catprod_2.jpg'
+                img: 'img/catprod_2.jpg',
+                qty: 6
             },
             {
                 title: 'Name 3',
                 id: 3,
                 price: 100,
-                img: 'img/catprod_3.jpg'
+                img: 'img/catprod_3.jpg',
+                qty: 6
             },
             {
                 title: 'Name 4',
                 id: 4,
                 price: 87,
-                img: 'img/catprod_4.jpg'
+                img: 'img/catprod_4.jpg',
+                qty: 4
             },
             {
                 title: 'Name 5',
                 id: 4,
-                price: 87,
-                img: 'img/catprod_5.jpg'
+                price: 195,
+                img: 'img/catprod_5.jpg',
+                qty: 9
             },
             {
                 // title: 'Name 6',
                 id: 4,
                 // price: 87,
-                // imgSrc: 'img/catprod_6.jpg'
+                // imgSrc: 'img/catprod_6.jpg',
+                qty: 91
             }
         ]
     }
@@ -80,6 +87,17 @@ class Catalog {
     }
 
     /**
+     * Метод подсчета суммы за все товары в каталоге, очень полезный метод, все же считают итоговую стоимость каталога
+     * добавил проверку, если изначально в data были неполные данные и цены не было, то подставляется 0
+     * @private
+     */
+    _getProductsPrice(defaultPrice = 0){
+        return this.products.reduce((totalPrice, item) => {
+            return  totalPrice += !item.price ? item.price = defaultPrice : item.price
+        }, 0)
+    }
+
+    /**
      * Рендер каталога, перед тем как непосредственно рендерить вызывает метод getProducts, который заполняет пустой массив свойства products, затем пробегаюсь по этому массиву forEach-ем и добавляю в контейнер готовую разметку.
      * @private
      */
@@ -87,6 +105,23 @@ class Catalog {
     _render(){
         this._getProducts()
         this.products.forEach(product => this.container.insertAdjacentHTML('beforeend', product.render()))
+
+    }
+
+    /**
+     * добавляет продукт в массив корзины
+     * @private
+     */
+    _addToBasket(){
+
+    }
+
+    /**
+     * Метод-обработчик событий для кнопки "Добавить в корзину" должен вызывать метод addToBasket
+     * @private
+     */
+
+    _addEventHandler(){
 
     }
 
@@ -123,7 +158,7 @@ class ProductItem {
                 <div class="product-item">
                     <img src="${this.img}" alt="${this.id}">
                     <div class="product-buttons">
-                        <a href="#" class="button"> <i class="fas fa-shopping-cart"></i>Add to Cart</a>
+                        <a href="#" class="button hoover_button"> <i class="fas fa-shopping-cart"></i>Add to Cart</a>
                     </div>
                 </div>
                 <div class="product-title">
@@ -133,6 +168,105 @@ class ProductItem {
             </div>
             `
     }
+}
+
+
+/**
+ * класс корзины
+ */
+
+class Cart {
+    container = null
+    dataFormCatalog = [] // dataFormCatalog - тот товар, что прилетит из каталога
+    products = [] // products - продукт класс, который будет соответствовать корзине
+
+    constructor() {
+    }
+
+    /**
+     * инициализация корзины, здесь вызываются все необходимые для функционала методы
+     */
+
+    init(){
+
+    }
+
+    /**
+     * рендер пустой корзины
+     * @private
+     */
+
+    _renderEmptyCart(){
+
+    }
+
+    /**
+     * получить массив продуктов соответствующих корзине
+     * @private
+     */
+
+    _getProducts(){
+
+    }
+
+    /**
+     * отрисовать корзину, здесь будет вызван метод _renderEmptyCart если корзина пуста
+     * @private
+     */
+
+    _renderCart(){
+
+    }
+
+    /**
+     * увеличение количества товара
+     * @private
+     */
+
+    _increaseQuantity(){
+
+    }
+
+    /**
+     * уменьшение количества товара
+     * @private
+     */
+
+    _decreaseQuantity(){
+
+    }
+
+    /**
+     * ивент, в зависимости от того, на какую кнопку нажимаем (добавить 1 или убрать 1) будут вызывать методы _increaseQuantity или _decreaseQuantity
+     * @private
+     */
+
+    _PlusOrMinusQuantityEvent(){
+
+    }
+
+    /**
+     * метод очистки корзины, должен очищать корзину и вызывать метод _renderCart, тот в свою очередь делает проверку на то, что корзина пуста и вызывает метод _renderEmptyCart
+     * @private
+     */
+
+    _clearCart(){
+
+    }
+
+    /**
+     * метод подсчета корзины
+     * @private
+     */
+
+    _getTotalPrice(){
+
+    }
+
+}
+
+class ProductItemForBasket{
+
 }
 
 const list = new Catalog('.productWraps')
