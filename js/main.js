@@ -1,104 +1,152 @@
 'use strict'
 
-const catalogContainer = document.querySelector('.productWraps')
-const itemsData = [
-    {
-        title: 'Name 1',
-        id: 1,
-        price: 2000,
-        imgSrc: 'img/catprod_1.jpg'
-
-    },
-    {
-        title: 'Name 2',
-        id: 2,
-        price: 200,
-        imgSrc: 'img/catprod_2.jpg'
-    },
-    {
-        title: 'Name 3',
-        id: 3,
-        price: 100,
-        imgSrc: 'img/catprod_3.jpg'
-    },
-    {
-        title: 'Name 4',
-        id: 4,
-        price: 87,
-        imgSrc: 'img/catprod_4.jpg'
-    },
-    {
-        title: 'Name 5',
-        id: 4,
-        price: 87,
-        imgSrc: 'img/catprod_5.jpg'
-    },
-    {
-        // title: 'Name 6',
-        id: 4,
-        // price: 87,
-        // imgSrc: 'img/catprod_6.jpg'
-    }
-];
-
 /**
- * простая функция рендера карточки, возвращает разметку, в параметрах функции используется де структуризация объекта
- * @param id
- * @param imgSrc
- * @param title
- * @param price
- * @returns
+ * Управляющий класс каталога, при инициализации принимает в себя один аргумент selector
  */
 
-const renderItem = ({id, imgSrc = 'img/default.jpeg', title = 'unknown', price = 100500}) => {
-    return `
+class Catalog {
+    data = []
+    products = []
+    container = null
+
+    constructor(selector) {
+        this.container = document.querySelector(selector)
+
+    }
+
+    /**
+     * Инициализирующий метод, через нее всё запускаю, две метода fetchData и render (каталога) можно было вынести в конструктор, но я решил сделать init
+     */
+
+    init(){
+        this._fetchData()
+        this._render()
+    }
+
+    /**
+     * метод fetchData: пока что это метод заглушка.
+     * @private
+     */
+
+    _fetchData(){
+        this.data = [
+            {
+                title: 'Name 1',
+                id: 1,
+                price: 2000,
+                img: 'img/catprod_1.jpg'
+
+            },
+            {
+                title: 'Name 2',
+                id: 2,
+                price: 200,
+                img: 'img/catprod_2.jpg'
+            },
+            {
+                title: 'Name 3',
+                id: 3,
+                price: 100,
+                img: 'img/catprod_3.jpg'
+            },
+            {
+                title: 'Name 4',
+                id: 4,
+                price: 87,
+                img: 'img/catprod_4.jpg'
+            },
+            {
+                title: 'Name 5',
+                id: 4,
+                price: 87,
+                img: 'img/catprod_5.jpg'
+            },
+            {
+                // title: 'Name 6',
+                id: 4,
+                // price: 87,
+                // imgSrc: 'img/catprod_6.jpg'
+            }
+        ]
+    }
+
+    /**
+     * Решил разбить метод рендер и добавил метод getProducts, который присваивает карточки товаров (уже с разметкой) пустому массиву свойства products
+     * @private
+     */
+
+    _getProducts(){
+        this.products = this.data.map(item => new ProductItem(item))
+    }
+
+    /**
+     * Рендер каталога, перед тем как непосредственно рендерить вызывает метод getProducts, который заполняет пустой массив свойства products, затем пробегаюсь по этому массиву forEach-ем и добавляю в контейнер готовую разметку.
+     * @private
+     */
+
+    _render(){
+        this._getProducts()
+        this.products.forEach(product => this.container.insertAdjacentHTML('beforeend', product.render()))
+
+    }
+
+}
+
+/**
+ * класс одного товара
+ */
+
+class ProductItem {
+    title = ''
+    price = 0
+    id = 0
+    img = ''
+
+    /**
+     * конструктор принимает в себя два аргумента, какой-то объект товара из data и значение изображения по умолчанию
+     * @param product
+     * @param defaultImg
+     */
+
+    constructor(product, defaultImg = 'img/default.jpeg') {
+        ({title: this.title, price: this.price, id: this.id, img: this.img = defaultImg} = product)
+    }
+
+    /**
+     * метод рендера, возвращает разметку
+     * @returns {string}
+     */
+
+    render(){
+        return `
             <div class="product-wrap">
                 <div class="product-item">
-                    <img src="${imgSrc}" alt="${id}">
+                    <img src="${this.img}" alt="${this.id}">
                     <div class="product-buttons">
                         <a href="#" class="button"> <i class="fas fa-shopping-cart"></i>Add to Cart</a>
                     </div>
                 </div>
                 <div class="product-title">
-                    <a class="prName" href="#">${title}</a>
-                    <span class="product-price">${price}$</span>
+                    <a class="prName" href="#">${this.title}</a>
+                    <span class="product-price">${this.price}$</span>
                 </div>
-            </div>    
+            </div>
             `
-}
-/**
- * Рендер карточек каталога через метод forEach, благодаря этому методу не возникает проблемы с отображением запятой, так как forEach не создает новый массив, а работает со значениями нынешнего.
- * Но этот метод нагружает браузер, когда товаров становится много, потому что каждый раз после += удаляется старая разметка и строится новая + 1 товар, в данном случае лучше использовать insertAdjacentHTML
- * @param header
- * @param data
- */
-
-// const renderCatalogList = (header, data) => {
-//     header.innerHTML = ''
-//     data.forEach(item => header.innerHTML += renderItem(item))
-// }
-
-/**
- * Использование forEach с insertAdjacentHTML
-  * @param header
- * @param data
- */
-
-// const renderCatalogList = (header, data) => {
-//     header.innerHTML = ''
-//     data.forEach(item => header.insertAdjacentHTML('beforeend', renderItem(item)))
-// }
-
-/**
- * Рендер карточек каталога через метод map, чтобы убрать запятые, применяется метод join с разделителем '' (без пробелов).
- * @param header
- * @param data
- */
-
-const renderCatalogList = (header, data) =>{
-    header.innerHTML = ''
-    header.innerHTML = data.map(item => renderItem(item)).join('')
+    }
 }
 
-renderCatalogList(catalogContainer, itemsData)
+const list = new Catalog('.productWraps')
+list.init()
+
+
+
+
+
+
+
+
+
+
+
+
 
