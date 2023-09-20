@@ -1,6 +1,98 @@
 'use strict'
 
 /**
+ * Базовый класс для товаров от которого будут наследоваться товар для корзины и для каталога
+ */
+
+class Item {
+    title = ''
+    price = 0
+    id = 0
+    img = ''
+
+    /**
+     * конструктор принимает в себя два аргумента, какой-то объект товара из data и значение изображения по умолчанию
+     * @param product
+     * @param defaultImg
+     */
+
+    constructor(product, defaultImg = 'img/default.jpeg') {
+        ({title: this.title, price: this.price, id: this.id, img: this.img = defaultImg} = product)
+    }
+
+    /**
+     * метод рендера, возвращает разметку
+     * @returns {string}
+     */
+
+    render(){
+        return `
+            <div class="product-wrap">
+                <div class="product-item">
+                    <img src="${this.img}" alt="${this.id}">
+                    <div class="product-buttons">
+                        <a href="#" class="button  hoover_button" data-id = "${this.id}"> <i class="fas fa-shopping-cart"></i>Add to Cart</a>
+                    </div>
+                </div>
+                <div class="product-title">
+                    <a class="prName" href="#">${this.title}</a>
+                    <span class="product-price">${this.price}$</span>
+                </div>
+            </div>
+            `
+    }
+}
+
+/**
+ * Класс товара для каталога
+ */
+class ProductItem extends Item{
+
+    /**
+     * Прослушка на контейнере, если клик по кнопке "Добавить в корзину", то вызывается метод _pushCatalogProductInCartData
+     * @param selector
+     * @param cartData
+     * @param catalogProducts
+     */
+    addEventHandler(selector, cartData, catalogProducts){
+
+        selector.addEventListener('click', (event)=>{
+            event.preventDefault()
+            const target = event.target
+            if (target && target.matches('.hoover_button')){
+
+                this._pushCatalogProductInCartData(target, catalogProducts, cartData)
+            }
+        })
+    }
+
+    /**
+     * метод сравнивает значение target id с id в массиве products, если айдишники совпадают, то пушит продукт в массив товаров в корзине
+     * НУЖНО СДЕЛАТЬ ПРОВЕРКУ, ПРИ КОТОРОЙ, ЕСЛИ ТОВАР ОДИНАКОВЫЙ, ТО НЕ ПУШИЛСЯ СНОВА, А ИЗМЕНЯЛОСЬ КОЛИЧЕСТВО ТОВАРА, вот только такого свойства как количество у меня пока нету)))
+     * @param target
+     * @param catalogProducts
+     * @param cartData
+     * @private
+     */
+    _pushCatalogProductInCartData(target, catalogProducts, cartData){
+
+        catalogProducts.forEach(item => {
+            if (parseInt(target.getAttribute('data-id')) === item.id){
+                cartData.push(item)
+                console.log(cartData)
+            }
+        })
+    }
+}
+
+class CartItem extends Item{
+
+}
+
+
+
+
+/**
  * Управляющий класс каталога, при инициализации принимает в себя один аргумент selector
  */
 
@@ -8,10 +100,11 @@ class Catalog {
     data = []
     products = []
     container = null
+    outerData = []
 
-    constructor(selector) {
+    constructor(selector, selectCartData) {
         this.container = document.querySelector(selector)
-
+        this.outerData = selectCartData
     }
 
     /**
@@ -21,7 +114,10 @@ class Catalog {
     init(){
         this._fetchData()
         this._render()
-        console.log(this._getProductsPrice())
+        setTimeout(()=>{
+            console.log(this._getProductsPrice())
+        }, 3000)
+
     }
 
     /**
@@ -62,14 +158,14 @@ class Catalog {
             },
             {
                 title: 'Name 5',
-                id: 4,
+                id: 5,
                 price: 195,
                 img: 'img/catprod_5.jpg',
                 qty: 9
             },
             {
                 // title: 'Name 6',
-                id: 4,
+                id: 6,
                 // price: 87,
                 // imgSrc: 'img/catprod_6.jpg',
                 qty: 91
@@ -105,70 +201,19 @@ class Catalog {
     _render(){
         this._getProducts()
         this.products.forEach(product => this.container.insertAdjacentHTML('beforeend', product.render()))
+        const addButtonListener = new ProductItem(this.container)
+        addButtonListener.addEventHandler(this.container, this.outerData ,this.products)
 
     }
 
-    /**
-     * добавляет продукт в массив корзины
-     * @private
-     */
-    _addToBasket(){
 
-    }
 
-    /**
-     * Метод-обработчик событий для кнопки "Добавить в корзину" должен вызывать метод addToBasket
-     * @private
-     */
-
-    _addEventHandler(){
-
-    }
 
 }
 
-/**
- * класс одного товара
- */
 
-class ProductItem {
-    title = ''
-    price = 0
-    id = 0
-    img = ''
 
-    /**
-     * конструктор принимает в себя два аргумента, какой-то объект товара из data и значение изображения по умолчанию
-     * @param product
-     * @param defaultImg
-     */
 
-    constructor(product, defaultImg = 'img/default.jpeg') {
-        ({title: this.title, price: this.price, id: this.id, img: this.img = defaultImg} = product)
-    }
-
-    /**
-     * метод рендера, возвращает разметку
-     * @returns {string}
-     */
-
-    render(){
-        return `
-            <div class="product-wrap">
-                <div class="product-item">
-                    <img src="${this.img}" alt="${this.id}">
-                    <div class="product-buttons">
-                        <a href="#" class="button hoover_button"> <i class="fas fa-shopping-cart"></i>Add to Cart</a>
-                    </div>
-                </div>
-                <div class="product-title">
-                    <a class="prName" href="#">${this.title}</a>
-                    <span class="product-price">${this.price}$</span>
-                </div>
-            </div>
-            `
-    }
-}
 
 
 /**
@@ -180,7 +225,8 @@ class Cart {
     dataFormCatalog = [] // dataFormCatalog - тот товар, что прилетит из каталога
     products = [] // products - продукт класс, который будет соответствовать корзине
 
-    constructor() {
+    constructor(selector) {
+        this.container = document.querySelector(selector)
     }
 
     /**
@@ -268,8 +314,8 @@ class Cart {
 class ProductItemForBasket{
 
 }
-
-const list = new Catalog('.productWraps')
+const onlineCart = new Cart('.cart')
+const list = new Catalog('.productWraps',onlineCart.dataFormCatalog, '.button')
 list.init()
 
 
